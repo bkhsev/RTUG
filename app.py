@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 
 """ RTUG - RUB to USD Graphs
-	- plotting graphs of russian stock prices in USD to compensate for the long-run devaluation of the RUB.
+    - plotting graphs of russian stock prices in USD to compensate for the long-run devaluation of the RUB.
 
-    Copyright (C) 2019  Boris Kharitontsev 
+    Copyright © 2019  Boris Kharitontsev 
 
     bkhsev@gmail.com
 
@@ -20,7 +21,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>. """
 
 
-# -*- coding: utf-8 -*-
+
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -50,19 +52,22 @@ split_dates = {"SBER": datetime.date(2007, 7, 19),
                "SBERP": datetime.date(2007, 7, 19),
                "NVTK": datetime.date(2006, 8, 17),
                "PHOR": datetime.date(2012, 3, 25)}
-#DATE
+
+
+#Setting releveant dates in Datetime module format
+
 now = datetime.date.today()
 before = datetime.date(2001, 1, 01)
 def m(x):
-	if x.month < 10:
-		return "0" + str(x.month)
-	else:
-		return str(x.month)
+   if x.month < 10:
+     return "0" + str(x.month)
+   else:
+     return str(x.month)
 def d(x):
-	if x.day < 10:
-		return "0" + str(x.day)
-	else:
-		return str(x.day)	
+   if x.day < 10:
+     return "0" + str(x.day)
+   else:
+     return str(x.day)   
 
 
 
@@ -79,67 +84,112 @@ byear = str(before.year)
 bday = d(before)
 
 
+
+#Declaring an app usinf Dash
+
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 
-app.layout = html.Div(children=[
+
+
+# App Layout
+
+app.layout = html.Div(children = [
+
+   html.H2("RUB To USD Graphs"),
+
+   html.H6("Ticker:", style = {'width': '5%', 'display': 'inline-block'}),
+
+   html.Div(" ", style = {'width': '10%', 'display': 'inline-block'}),
+
+   html.H6("RSI:", style = {'width': '10%', 'display': 'inline-block'}),
+
+   html.Div(" ", style = {'width': '5%', 'display': 'inline-block'}),
+
+   html.H6("Choose an interval:", style = {'width': '70%', 'display': 'inline-block'}),
+
+
+
+
+   dcc.Input(id='ticker', className = 'H1', type = 'text', size = "6", placeholder = 'Ticker', style = {'width': '5%', 'display': 'inline-block'}),
+
+   html.Div(" ", style = {'width': '10%', 'display': 'inline-block'}),
+
+   dcc.Input(id='rsi', className = 'H3', type = 'text', placeholder = 'RSI', value = '14', style = {'width': '5%', 'display': 'inline-block'}),
+
+   html.Div(" ", style = {'width': '10%', 'display': 'inline-block'}),
+   
+   dcc.RadioItems(id = 'monthly',
+        options=[
+            {'label': "Monthly", 'value': "monthly"},
+            {'label': "Weekly", 'value': "weekly"}
+], value = 'monthly', style = {'width': '70%', 'display': 'inline-block', 'align': 'centre'}),
+   
+
+   dcc.Graph(id = "my-graph"),
+
+   html.Div('Copyright © 2019  Boris Kharitontsev'),
+   html.Div('bkhsev@gmail.com')
+
+   ])
+
+#Input the ticker above, start preparing data
+
+
+
+
+
+@app.callback(
+    Output('my-graph', 'figure'),
+    [Input('ticker', 'n_submit'), Input('monthly', 'value'), Input('rsi', 'n_submit')],
+    [State('ticker', 'value'), State('rsi', 'value')])
+def update_output_1(ns1, input2, ns2, input1, input3):
+   ticker = (str(input1)).upper()
+
     
-    dcc.Input(id='ticker', className = "H1", type='text', placeholder = "Ticker"),
-    html.Button(id='submit-button', n_clicks=0, children='Submit'),
-    html.Div(id = "output-state"),
-    
+
+   #downloading wtock quotes in RUB. Some initial pre-processing of the data.
+
+   url = "http://export.rbc.ru/free/micex.0/free.fcgi?period=DAILY&tickers="+ticker+"&d1="+bday+"&m1="+bmonth+"&y1="+byear+"&d2="+nday+"&m2="+nmonth+"&y2="+nyear+"&lastdays="+diff+"&separator=,&data_format=EXCEL&header=1"
+   g = urllib2.urlopen(url)
+   data = g.read()
+   with open("quotes.csv", "wb") as code:
+             code.write(data)
+
+   quotes = pd.read_csv("quotes.csv")   
+   quotes.drop(columns = ["TICKER", "WAPRICE"], inplace = True)
+   quotes = quotes[pd.notnull(quotes.CLOSE) == True]
 
 
-] )
+    #downloading RUB/USD quotes, pre-processing.
+   url2 = "http://export.rbc.ru/free/cb.0/free.fcgi?period=DAILY&tickers=USD&d1="+bday+"&m1="+bmonth+"&y1="+byear+"&d2="+nday+"&m2="+nmonth+"&y2="+nyear+"&lastdays="+diff+"&separator=,&data_format=EXCEL&header=1"
+   s = urllib2.urlopen(url2)
+   data2 = s.read()
+   with open("usd.csv", "wb") as code:
+       code.write(data2)
 
-
-@app.callback(Output('output-state', 'children'),
-              [Input('submit-button', 'n_clicks')],
-              [State('ticker', 'value')])
-def update_output(n_clicks, input1):
-    ticker = (str(input1)).upper()
-
-    url = "http://export.rbc.ru/free/micex.0/free.fcgi?period=DAILY&tickers="+ticker+"&d1="+bday+"&m1="+bmonth+"&y1="+byear+"&d2="+nday+"&m2="+nmonth+"&y2="+nyear+"&lastdays="+diff+"&separator=,&data_format=EXCEL&header=1"
-    
-    g = urllib2.urlopen(url)
-    data = g.read()
-    with open("quotes.csv", "wb") as code:
-   	    	code.write(data)
-
-    quotes = pd.read_csv("quotes.csv")	
-    quotes.drop(columns = ["TICKER", "WAPRICE"], inplace = True)
-    quotes = quotes[pd.notnull(quotes.CLOSE) == True]
-
-
-	
-
-    url2 = "http://export.rbc.ru/free/cb.0/free.fcgi?period=DAILY&tickers=USD&d1="+bday+"&m1="+bmonth+"&y1="+byear+"&d2="+nday+"&m2="+nmonth+"&y2="+nyear+"&lastdays="+diff+"&separator=,&data_format=EXCEL&header=1"
-    s = urllib2.urlopen(url2)
-    data2 = s.read()
-    with open("usd.csv", "wb") as code:
-    		code.write(data2)
-
-    usd = pd.read_csv("usd.csv")
-    usd.drop(columns = ["TICKER", "OPEN", "HIGH", "LOW", "VOL", "WAPRICE", "NOMINAL"], inplace = True)
-    usd.rename(columns = {"CLOSE" : "KURS"}, inplace = True)
+   usd = pd.read_csv("usd.csv")
+   usd.drop(columns = ["TICKER", "OPEN", "HIGH", "LOW", "VOL", "WAPRICE", "NOMINAL"], inplace = True)
+   usd.rename(columns = {"CLOSE" : "KURS"}, inplace = True)
 
 
 
-    dates = pd.date_range(start=before, end=now)
-    date = pd.DataFrame({"DATE":dates})
-    date.DATE = date.DATE.astype(str)
+   dates = pd.date_range(start=before, end=now)
+   date = pd.DataFrame({"DATE":dates})
+   date.DATE = date.DATE.astype(str)
 
-    usd_all = pd.merge(date, usd, how = "left", on = "DATE")
-    usd_all.fillna(method = "ffill", inplace = True) 
+   usd_all = pd.merge(date, usd, how = "left", on = "DATE")
+   usd_all.fillna(method = "ffill", inplace = True) 
 
 
 
 
-
-    #SPLITS CONT
-    if ticker in split_stocks:
+    #Manually processing splits.
+   if ticker in split_stocks:
 
 
       dates_to_change = []
@@ -153,164 +203,236 @@ def update_output(n_clicks, input1):
       quotes["CLOSE"] = quotes.apply(
         lambda x: x.CLOSE / split_ratios[ticker] if x.DATE in dates_to_change else x.CLOSE,
         axis = 1,
-      )      
+      )   
 
 
 
 
+    #Changing the prices from RUB to USD, using the date as a basis for correlation.
 
+   final = pd.merge(quotes, usd_all, how = "left", on = "DATE")
 
+   final["open_usd"] = final.OPEN / final.KURS
+   final["high_usd"] = final.HIGH / final.KURS
+   final["low_usd"] = final.LOW / final.KURS
+   final["close_usd"] = final.CLOSE / final.KURS
 
-
-    final = pd.merge(quotes, usd_all, how = "left", on = "DATE")
-
-    final["open_usd"] = final.OPEN / final.KURS
-    final["high_usd"] = final.HIGH / final.KURS
-    final["low_usd"] = final.LOW / final.KURS
-    final["close_usd"] = final.CLOSE / final.KURS
-
-    final.drop(columns = ["OPEN", "HIGH", "CLOSE", "LOW", "KURS"], inplace = True)
-
+   final.drop(columns = ["OPEN", "HIGH", "CLOSE", "LOW", "KURS"], inplace = True)
+ 
     
 
-    final["AVG"] = final.close_usd.rolling(window=1260).mean()
+    #adding total volume per last 5 days
+   final["cumvol"] = final.VOL.rolling(window = 5).sum()
 
-    
-    
-    
-    
+    #The most recent day i.e. representation for current week/month
 
-    def cumvol(x):
-	
-    	a = '^' + x[:8] + "..$"
-    	pattern = re.compile(a)
-    	matches = [e for e in final.DATE if pattern.match(e)]
-	
-	
-
-    	kukushka = 0 
-    	for i in matches:
-		
-    		hleb = final.loc[final['DATE'] == i]["VOL"]
-    		kukushka += hleb.sum()
-		
-	
-    	return kukushka	
+   df1 = final.tail(1)
 
 
-      
+    #Creates a list of dates of each of the month ends in a range from 01/01/2001 till today.
+   month_end_dates = []
 
 
-    df1 = final.tail(1)
+   fm = pd.date_range(before, now, freq = "BM")
+   for i in fm:
+       month_end_dates.append(str(i.date()))
 
-    
-    pricedf1 = df1.iloc[0]['close_usd']
-    smadf1 = 0
-
-    if pd.isnull(final["AVG"].iloc[-1]) == True:
-      smadf1 = final["close_usd"].mean()
-    else: 
-      smadf1 = df1.iloc[0]['AVG']
-
-    
-    output = 0
-    
-    def calc():
-    	if pricedf1 > smadf1:
-    		output = int(-round(((pricedf1/smadf1-1)*100), 0))
-		
-    	else:
-    		output = int(round(((smadf1/pricedf1-1)*100), 0))
-    	return output
+   month_end_dates = sorted(month_end_dates)
 
 
-    o = str(calc()) + "%" 
+    #Creates a list of dates of each of the week ends in the range above
 
-    
-    
-	
-    start_end_dates = []
-	
+   week_end_dates = []
 
-    fm = pd.date_range(before, now, freq = "BM")
-    for i in fm:
-    	start_end_dates.append(str(i.date()))
+   weird_variable  = pd.date_range(before, now, freq = "W-FRI")
 
-    start_end_dates = sorted(start_end_dates)
-	
+   for i in weird_variable:
+       week_end_dates.append(str(i.date()))
+
+   week_end_dates = sorted(week_end_dates)
 
 
 
-    df2 = final[final.DATE.isin(start_end_dates)]
+    #Dataframe with monthly quotes (DF3 previously)
+   m_quotes = final[final.DATE.isin(month_end_dates)]
+
+   m_quotes_u = pd.concat([m_quotes, df1])
+
+    #Dataframe with weekly quotes
+   w_quotes = final[final.DATE.isin(week_end_dates)]
+
+   w_quotes_u = pd.concat([w_quotes, df1])
+
+
+    #adding SMA-60
+
+   m_quotes_u["AVG"] = m_quotes_u.close_usd.rolling(window = 60).mean()
+   w_quotes_u["AVG"] = w_quotes_u.close_usd.rolling(window = 60).mean()
+
+    #adding total volume per month
+
+   def monthly_vol(x):
+   
+       a = '^' + x[:8] + "..$"
+       pattern = re.compile(a)
+       matches = [e for e in final.DATE if pattern.match(e)]
+   
+   
+
+       kukushka = 0 
+       for i in matches:
+   
+           hleb = final.loc[final['DATE'] == i]["VOL"]
+       kukushka += hleb.sum()
+   
+   
+       return kukushka   
 
 
 
 
-    df3 = pd.concat([df2, df1])
-    
-    
-	
-    df3.AVG.iloc[-1] = smadf1
+   m_quotes_u.drop(columns = ["cumvol"], inplace = True)
+   m_quotes_u["cumvol"] = m_quotes_u.DATE.apply(monthly_vol)
 
-    
-    
-
-    perc = lambda row: np.NaN if pd.isnull(row.AVG) == True else (int(-round(((row.close_usd/row.AVG-1)*100), 0)) if row.close_usd > row.AVG else (0 if row.close_usd == row.AVG else int(round(((row.AVG/row.close_usd-1)*100), 0))))
+    # For weekly volume, please see column cumvol_w in any dataframe. Managed at line 190.
 
 
-    df3["perc"] = df3.apply(perc, axis = 1)
-    percentages = [str(x) for x in df3.perc]
+    #managing the PERCENT value
+   current_price = df1.iloc[0]['close_usd']
 
-    
+   sma_60_m = 0 
+   sma_60_w = 0
 
-    df3["cumvol"] = df3.DATE.apply(cumvol)
 
-    lemor = df3[["open_usd", "high_usd", "low_usd", "close_usd", "VOL"]]
-    rsi = lemor.rename(columns = {"open_usd": "Open",
+   if pd.isnull(m_quotes_u["AVG"].iloc[-1]) == True:
+      sma_60_m = m_quotes_u["close_usd"].mean()
+   else: 
+      sma_60_m = m_quotes_u.iloc[-1]['AVG']
+
+
+
+   if pd.isnull(w_quotes_u["AVG"].iloc[-1]) == True:
+      sma_60_w = w_quotes_u["close_usd"].mean()
+   else: 
+      sma_60_w = w_quotes_u.iloc[-1]['AVG']
+
+
+
+   output = 0
+
+   def calc(price, sma):
+        if price > sma:
+            output = int(-round(((price/sma-1)*100), 0))
+        
+        else:
+            output = int(round(((sma/price-1)*100), 0))
+        return output
+
+
+   current_perc_m = str(calc(current_price, sma_60_m)) + "%"
+   current_perc_w = str(calc(current_price, sma_60_w)) + "%"
+
+    # In case we have historical data for less than 60 weeks/months, 
+    # set SMA equal to the mean of all available data
+
+   m_quotes_u.AVG.iloc[-1] = sma_60_m
+   w_quotes_u.AVG.iloc[-1] = sma_60_w
+
+
+    #Creating "PERCENT" values for all data points where both price and SMA are available
+   perc = lambda row: np.NaN if pd.isnull(row.AVG) == True else (int(-round(((row.close_usd/row.AVG-1)*100), 0)) if row.close_usd > row.AVG else (0 if row.close_usd == row.AVG else int(round(((row.AVG/row.close_usd-1)*100), 0))))
+
+   m_quotes_u["perc"] = m_quotes_u.apply(perc, axis = 1)
+   w_quotes_u["perc"] = w_quotes_u.apply(perc, axis = 1)
+
+   m_percentages = [str(x) for x in m_quotes_u.perc]
+   w_percentages = [str(x) for x in w_quotes_u.perc]
+
+    #Managing RSI
+
+   lemor_m = m_quotes_u[["open_usd", "high_usd", "low_usd", "close_usd", "VOL"]]
+   lemor_w = w_quotes_u[["open_usd", "high_usd", "low_usd", "close_usd", "VOL"]]
+
+   rsi_m = lemor_m.rename(columns = {"open_usd": "Open",
                                 "high_usd": "High",
                                 "low_usd": "Low",
                                 "close_usd": "Close",
                                 "VOL": "Volume"
-      })    
+      })
 
-    stock_df = StockDataFrame.retype(rsi)
-
-    check= stock_df["rsi_14"]
-    
-    deer = []
-
-    for i in check:
-      deer.append(i)
-    
-
-    df3["rsi"] = deer
+   rsi_w = lemor_w.rename(columns = {"open_usd": "Open",
+                                "high_usd": "High",
+                                "low_usd": "Low",
+                                "close_usd": "Close",
+                                "VOL": "Volume"
+      })
 
     
+   stock_df_m = StockDataFrame.retype(rsi_m)
+   stock_df_w = StockDataFrame.retype(rsi_w)
 
-    trace1 = {
-  "x": df3.DATE, 
-  "y": df3.close_usd, 
+    #need to create a variable for the rsi category here, but for now it's rsi-14
+   which_rsi = "rsi_" + str(input3)
+   check_m = stock_df_m[which_rsi]
+   check_w = stock_df_w[which_rsi]
+
+   deer_m = []
+   deer_w = []
+
+   for i in check_m:
+        deer_m.append(i)
+
+   for i in check_w:
+        deer_w.append(i)
+
+
+   m_quotes_u["rsi"] = deer_m
+   w_quotes_u["rsi"] = deer_w
+
+
+    #seting default graph settings
+   
+   
+
+   name_to_df = {"monthly": m_quotes_u,
+         "weekly": w_quotes_u}
+
+   name_to_perc = {"monthly": current_perc_m,
+                    "weekly": current_perc_w}
+
+   name_to_percentages = {"monthly": m_percentages,
+                           "weekly": w_percentages}
+
+   
+   df_to_use = name_to_df[input2]
+   perc_to_use = name_to_perc[input2]
+   percentages_to_use = name_to_percentages[input2]
+
+
+   trace1 = {
+  "x": df_to_use.DATE, 
+  "y": df_to_use.close_usd, 
   "fill": "none", 
   "hoverinfo": "x+y", 
   "mode": "lines", 
   "name": "Price", 
   "type": "scatter"
 }
-    trace2 = {
-  "x": df3.DATE, 
-  "y": df3.AVG, 
+   trace2 = {
+  "x": df_to_use.DATE, 
+  "y": df_to_use.AVG, 
   "fill": "none", 
   "hoverinfo": "x+y+text",
-  "text": percentages,
+  "text": percentages_to_use,
   "line": {"color": "rgb(255, 38, 14)"}, 
   "marker": {"size": 3},
   "mode": "markers+lines", 
   "name": "SMA", 
   "type": "scatter"
 }
-    trace3 = {
-  "x": df3.DATE, 
-  "y": df3.cumvol, 
+   trace3 = {
+  "x": df_to_use.DATE, 
+  "y": df_to_use.cumvol, 
   "hoverinfo": "x+y", 
   "marker": {"color": "#2ca02c"}, 
   "name": "Volume", 
@@ -321,9 +443,9 @@ def update_output(n_clicks, input1):
 }
 
 
-    trace4 = {
-  "x": df3.DATE, 
-  "y": df3.rsi, 
+   trace4 = {
+  "x": df_to_use.DATE, 
+  "y": df_to_use.rsi, 
   "fill": "tozeroy",
   "fillcolor": "rgba(255, 255, 255, 0.5)", 
   "hoverinfo": "x+y", 
@@ -335,11 +457,11 @@ def update_output(n_clicks, input1):
   "yaxis": "y3"
 }
 
-    data = Data([trace1, trace2, trace3, trace4])
+   data = Data([trace1, trace2, trace3, trace4])
 
 
 
-    layout = {
+   layout = {
   "height": 820,
   "autosize": True, 
   "dragmode": "orbit", 
@@ -400,22 +522,15 @@ def update_output(n_clicks, input1):
     "title": "RSI", 
     "type": "linear"
   }
-}
+    }
 
 
 
 
-    return html.H1(children = ticker), html.H3(children = o), dcc.Graph(
-        id='my-graph',
-        figure={
-            'data': data,
-            'layout': layout
-            
-        }
-    )	
 
-
-
+   return  {'data': data,
+            'layout': layout}
+         
 
 
 
@@ -424,7 +539,7 @@ def update_output(n_clicks, input1):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-    
+
 
 
 
