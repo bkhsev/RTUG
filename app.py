@@ -22,25 +22,27 @@
 
 
 
-
+#Imports regarding GUI and Graphing
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
-import urllib2
-import multipart
-import pandas as pd
-import csv
-import datetime
-import re
 import plotly.plotly as py
 from plotly.graph_objs import *
-import webbrowser
-import time
-import email
+
+#Imports regarding data management
+import urllib2
+import csv
+import pandas as pd
 import numpy as np
+import datetime
+import re
+
+#An import for financial indicators
 from stockstats import StockDataFrame
+
+
 
 #SPLITS
 split_stocks = ["SBER", "NVTK", "PHOR", "SBERP"]
