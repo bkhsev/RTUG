@@ -428,7 +428,7 @@ def update_output_1(ns1, input2, ns2, input1, input3):
   "text": percentages_to_use,
   "line": {"color": "rgb(255, 38, 14)"}, 
   "marker": {"size": 3},
-  "mode": "markers+lines", 
+  "mode": "lines", 
   "name": "SMA", 
   "type": "scatter"
 }
