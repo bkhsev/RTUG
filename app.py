@@ -310,9 +310,12 @@ def update_output_1(ns1, input2, ns2, input1, input3):
    sma_60_m = 0 
    sma_60_w = 0
 
+   point_check_m = ""
+   point_check_w = ""
 
    if pd.isnull(m_quotes_u["AVG"].iloc[-1]) == True:
       sma_60_m = m_quotes_u["close_usd"].mean()
+      point_check_m = "markers+"
    else: 
       sma_60_m = m_quotes_u.iloc[-1]['AVG']
 
@@ -320,6 +323,7 @@ def update_output_1(ns1, input2, ns2, input1, input3):
 
    if pd.isnull(w_quotes_u["AVG"].iloc[-1]) == True:
       sma_60_w = w_quotes_u["close_usd"].mean()
+      point_check_w = "markers+"
    else: 
       sma_60_w = w_quotes_u.iloc[-1]['AVG']
 
@@ -411,10 +415,14 @@ def update_output_1(ns1, input2, ns2, input1, input3):
                            "weekly": w_percentages}
 
    
+   point_to_check = {"monthly": point_check_m,
+                      "weekly": point_check_w}
+
    df_to_use = name_to_df[input2]
    perc_to_use = name_to_perc[input2]
    percentages_to_use = name_to_percentages[input2]
 
+   point_check = point_to_check[input2]
 
 
    trace1 = {
@@ -434,7 +442,7 @@ def update_output_1(ns1, input2, ns2, input1, input3):
   "text": percentages_to_use,
   "line": {"color": "rgb(255, 38, 14)"}, 
   "marker": {"size": 3},
-  "mode": "lines", 
+  "mode": point_check + "lines", 
   "name": "SMA", 
   "type": "scatter"
 }
