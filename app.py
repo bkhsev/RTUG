@@ -43,7 +43,6 @@ import re
 from stockstats import StockDataFrame
 
 
-
 #SPLITS
 split_stocks = ["SBER", "NVTK", "PHOR", "SBERP"]
 split_ratios = {"SBER": 1000,
@@ -87,7 +86,7 @@ bday = d(before)
 
 
 
-#Declaring an app usinf Dash
+#Declaring an app using Dash
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -97,12 +96,13 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 
 
-
 # App Layout
 
 app.layout = html.Div(children = [
 
-   html.H2("RUB To USD Graphs"),
+   #First line under the title
+
+   html.H2("RTUG"),
 
    html.H6("Ticker:", style = {'width': '5%', 'display': 'inline-block'}),
 
@@ -117,6 +117,9 @@ app.layout = html.Div(children = [
 
 
 
+
+   #Second line
+
    dcc.Input(id='ticker', className = 'H1', type = 'text', size = "6", placeholder = 'Ticker', style = {'width': '5%', 'display': 'inline-block'}),
 
    html.Div(" ", style = {'width': '10%', 'display': 'inline-block'}),
@@ -130,7 +133,9 @@ app.layout = html.Div(children = [
             {'label': "Monthly", 'value': "monthly"},
             {'label': "Weekly", 'value': "weekly"}
 ], value = 'monthly', style = {'width': '70%', 'display': 'inline-block', 'align': 'centre'}),
-   
+
+
+   #Graph
 
    dcc.Graph(id = "my-graph"),
 
@@ -139,9 +144,9 @@ app.layout = html.Div(children = [
 
    ])
 
+
+
 #Input the ticker above, start preparing data
-
-
 
 
 
@@ -347,8 +352,8 @@ def update_output_1(ns1, input2, ns2, input1, input3):
    m_quotes_u["perc"] = m_quotes_u.apply(perc, axis = 1)
    w_quotes_u["perc"] = w_quotes_u.apply(perc, axis = 1)
 
-   m_percentages = [str(x) for x in m_quotes_u.perc]
-   w_percentages = [str(x) for x in w_quotes_u.perc]
+   m_percentages = [str(x) + "%" for x in m_quotes_u.perc]
+   w_percentages = [str(x) + "%" for x in w_quotes_u.perc]
 
     #Managing RSI
 
@@ -392,7 +397,7 @@ def update_output_1(ns1, input2, ns2, input1, input3):
    w_quotes_u["rsi"] = deer_w
 
 
-    #seting default graph settings
+  #setting default graph settings
    
    
 
@@ -409,6 +414,7 @@ def update_output_1(ns1, input2, ns2, input1, input3):
    df_to_use = name_to_df[input2]
    perc_to_use = name_to_perc[input2]
    percentages_to_use = name_to_percentages[input2]
+
 
 
    trace1 = {
@@ -464,6 +470,27 @@ def update_output_1(ns1, input2, ns2, input1, input3):
 
 
    layout = {
+  "annotations": [
+     {
+      "x": 0, 
+      "y": 0.95, 
+      "align": "center", 
+      "ax": -623, 
+      "axref": "x", 
+      "ay": -238, 
+      "ayref": "y", 
+      "font": {
+        "family": "Arial", 
+        "size": 19
+      }, 
+      "showarrow": False, 
+      "text": "MoS = " + perc_to_use, 
+      "textangle": 0, 
+      "xanchor": "left", 
+      "xref": "paper", 
+      "yanchor": "top", 
+      "yref": "paper"
+    }],
   "height": 820,
   "autosize": True, 
   "dragmode": "orbit", 
@@ -541,12 +568,3 @@ def update_output_1(ns1, input2, ns2, input1, input3):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
-
-
-
-
-
-
-
-
