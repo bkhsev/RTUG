@@ -470,31 +470,19 @@ def update_output_1(ns1, input2, ns2, input1, input3):
 
 
    layout = {
-  "annotations": [
-     {
-      "x": 0, 
-      "y": 0.95, 
-      "align": "center", 
-      "ax": -623, 
-      "axref": "x", 
-      "ay": -238, 
-      "ayref": "y", 
-      "font": {
-        "family": "Arial", 
-        "size": 19
-      }, 
-      "showarrow": False, 
-      "text": "MoS = " + perc_to_use, 
-      "textangle": 0, 
-      "xanchor": "left", 
-      "xref": "paper", 
-      "yanchor": "top", 
-      "yref": "paper"
-    }],
+
   "height": 820,
   "autosize": True, 
   "dragmode": "orbit", 
-  "showlegend": False,  
+  "showlegend": False, 
+  "title": {
+    "x": 0.95, 
+    "font": {
+      "size": 23, 
+      "family": "Arial"
+    }, 
+    "text": "MoS = " + perc_to_use
+  }, 
   "titlefont": {"family": "Arial"}, 
   "xaxis": {
     "anchor": "y3", 
