@@ -31,7 +31,7 @@ In terminal,
  
  **Or**
  
- ![Alt Text](https://github.com/bkhsev/files-used-in-other-repos/blob/master/clone.gif)
+ ![The GIF was not found :(](https://github.com/bkhsev/files-used-in-other-repos/blob/master/RTUG/clone.gif)
  
  
  2. To set up your development/testing environment, run the following commands:
