@@ -38,7 +38,7 @@ In terminal,
  
  ``` bash
 # Move into the clone
-$ cd dash
+$ cd RTUG
 # Create a virtualenv
 $ python2 -m venv venv
 # Activate the virtualenv
