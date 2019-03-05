@@ -44,19 +44,22 @@ from stockstats import StockDataFrame
 
 
 #SPLITS or any other artificial change of nominal value of the share
-split_stocks = ["SBER", "NVTK", "PHOR", "SBERP", "IRAO"]
+split_stocks = ["SBER", "NVTK", "PHOR", "SBERP", "IRAO", "AFKS"]
 
 split_ratios = {"SBER": 1000,
                 "SBERP": 20,
                 "NVTK": 1000,
                 "PHOR": 10,
-                "IRAO": 0.01}
+                "IRAO": 0.01,
+                "AFKS": 1000}
 
+# Date is in format YYYY, M, DD
 split_dates = {"SBER": datetime.date(2007, 7, 19),
                "SBERP": datetime.date(2007, 7, 19),
                "NVTK": datetime.date(2006, 8, 17),
                "PHOR": datetime.date(2012, 3, 25),
-               "IRAO": datetime.date(2015, 1, 20)}
+               "IRAO": datetime.date(2015, 1, 20),
+               "AFKS": datetime.date(2007, 12, 11)}
 
 
 #Setting releveant dates in Datetime module format
