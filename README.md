@@ -26,7 +26,7 @@ In fact, the firm is stagnating and has a negative growth trend. :-1:
 
 So, stock charts in RUB (Russian Ruble) are usually misleading about the quality of the business. 
 
-RTUG shows you a more realistic picture.
+RTUG helps you visualise a more realistic picture. 
  
 ## Prerequisites
 RTUG uses Python 2.7 and the following python modules:
