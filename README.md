@@ -34,7 +34,7 @@ RTUG helps you visualise a more realistic picture.
 Whether you are just a visitor or a contributor, we want to embrace an open and welcoming environment. :relaxed:
 Therefore this project follows this [Code of Conduct](CODE_OF_CONDUCT.md).
 
-If you want to help the project, feel free to check out [Contributing Guide](CONTRIBUTING.MD). 
+If you want to help the project, feel free to check out [Contributing Guide](CONTRIBUTING.md). 
 
 Any help or suggestions are very much welcome! :+1:
 
