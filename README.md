@@ -28,51 +28,25 @@ So, stock charts in RUB (Russian Ruble) are usually misleading about the quality
 
 RTUG helps you visualise a more realistic picture. 
  
-## Prerequisites
-RTUG uses Python 2.7 and the following python modules:
 
-#### Third-party modules
-- dash
-- plotly
-- stockstats
-- pandas 
-- numpy
-- datetime
+## Contributing
 
-#### Modules embedded in Python
-(This modules do not require installation)
-- urllib2 
-- csv
-- re
+Whether you are just a visitor or a contributor, we want to embrace an open and welcoming environment. :relaxed:
+Therefore this project follows this [Code of Conduct](CODE_OF_CONDUCT.md).
+
+If you want to help the project, feel free to check out [Contributing Guide](CONTRIBUTING.MD). 
+
+Any help or suggestions are very much welcome! :+1:
+
+## Contact
+
+We are happy to recieve any questions or suggestions! 
+
+Feel free to contact the owner of the repository by creating an [issue](https://github.com/bkhsev/RTUG/issues) or email.
+
+:email: bkhsev@gmail.com
 
 
-## Installation
 
-1. Fork and clone the RTUG [repo](https://github.com/bkhsev/RTUG).
 
-**Either**
 
-In terminal,
-
-`$ git clone https://github.com/bkhsev/RTUG.git`
- 
- **Or**
- 
- ![The GIF is not here today :()](additional/README_FILES/clone.gif)
- 
- 
- 2. To set up your development/testing environment, run the following commands:
- 
- ``` bash
-# Move into the clone
-$ cd RTUG
-# Create a virtualenv
-$ python2 -m venv venv
-# Activate the virtualenv
-$ . venv/bin/activate
-# (On Windows, the above would be: venv\scripts\activate)
-# Install required dependencies
-$ pip install -r additional/requirements.txt
- ```
- 
- You are set and ready to begin! :rocket:
