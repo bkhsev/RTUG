@@ -2,7 +2,7 @@
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
 
-Please note we have a ![code of conduct](/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
+Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
 
 ## Getting Started
 
@@ -16,7 +16,7 @@ In terminal,
  
  **Or**
  
- ![The GIF is not here today :()](additional/README_FILES/clone.gif)
+ ![The GIF is not here today :()](https://user-images.githubusercontent.com/40441761/54226615-41aa0c00-450f-11e9-9990-520aef58392b.gif)
  
  
  2. To set up your development/testing environment, run the following commands:
