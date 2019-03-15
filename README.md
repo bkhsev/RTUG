@@ -1,7 +1,11 @@
 # RTUG
 RTUG plots charts of russian stock prices in USD (United States Dollar) to compensate for the long-run devaluation of the RUB (Russian Ruble).
 
+**Plot a chart** 
+
 ![Search](https://user-images.githubusercontent.com/40441761/54430675-5d8ef700-4735-11e9-9468-d1b2bc10046c.gif)
+
+**Switch between Monthly/Weekly Charts**
 
 ![Weekly](https://user-images.githubusercontent.com/40441761/54430929-0fc6be80-4736-11e9-85d0-24ba39c8769c.gif)
 
