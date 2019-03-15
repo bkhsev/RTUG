@@ -1,4 +1,5 @@
 # RTUG
+
 RTUG plots charts of russian stock prices in USD (United States Dollar) to compensate for the long-run devaluation of the RUB (Russian Ruble).
 
 **Plot a chart** 
@@ -8,6 +9,11 @@ RTUG plots charts of russian stock prices in USD (United States Dollar) to compe
 **Switch between Monthly/Weekly Charts**
 
 ![Weekly](https://user-images.githubusercontent.com/40441761/54430929-0fc6be80-4736-11e9-85d0-24ba39c8769c.gif)
+
+**Use a slider to scale and navigate**
+
+![Slider](https://user-images.githubusercontent.com/40441761/54437957-ce8ada80-4746-11e9-8e59-7f37b83381bb.gif)
+
 
 ## Why bother?  :grimacing:
 Russian Ruble is a soft currency. Therefore, in the long-run it experiences devaluation. :chart_with_downwards_trend:	
