@@ -29,7 +29,7 @@ jsonschema==3.0.1
 jupyter-core==4.4.0
 macholib==1.11
 MarkupSafe==1.1.1
-mkl-fft==1.0.10
+mkl-fft==1.0.6
 mkl-random==1.0.2
 nbformat==4.4.0
 numpy==1.16.2
